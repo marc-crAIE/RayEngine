@@ -1,0 +1,3 @@
+[submodule "Libs/SharpMaths"]
+	path = Libs/SharpMaths
+	url = https://github.com/marc-crAIE/SharpMaths.git
