@@ -1,3 +1,6 @@
 [submodule "Libs/SharpMaths"]
 	path = Libs/SharpMaths
 	url = https://github.com/marc-crAIE/SharpMaths.git
+[submodule "Libs/SharpECS"]
+	path = Libs/SharpECS
+	url = https://github.com/marc-crAIE/SharpECS.git
