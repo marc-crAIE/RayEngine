@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using RayEngine.Utils;
+using Raylib_cs;
 using SharpMaths;
 
 namespace RayEngine.Graphics
@@ -12,7 +13,8 @@ namespace RayEngine.Graphics
         {
             if (Rendering)
                 throw new InvalidOperationException("The renderer is already rendering!");
-                
+
+            Raylib.ClearBackground(new Colour(0, 0, 0, 0).ToColor());
             Raylib.BeginDrawing();
             Rendering = true;
         }
