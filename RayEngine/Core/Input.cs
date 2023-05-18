@@ -5,29 +5,29 @@ namespace RayEngine.Core
 {
     public static class Input
     {
-        public static bool IsKeyPressed(KeyboardKey key)
+        public static bool IsKeyPressed(Key key)
         {
-            return Raylib.IsKeyDown(key);
+            return Raylib.IsKeyDown((Raylib_cs.KeyboardKey)key);
         }
 
         public static bool IsKeyTyped(KeyboardKey key)
         {
-            return Raylib.IsKeyPressed(key);
+            return Raylib.IsKeyPressed((Raylib_cs.KeyboardKey)key);
         }
 
         public static bool IsKeyReleased(KeyboardKey key)
         {
-            return Raylib.IsKeyReleased(key);
+            return Raylib.IsKeyReleased((Raylib_cs.KeyboardKey)key);
         }
 
-        public static bool IsMouseButtonPressed(MouseButton button)
+        public static bool IsMouseButtonPressed(Mouse button)
         {
-            return Raylib.IsMouseButtonDown(button);
+            return Raylib.IsMouseButtonDown((Raylib_cs.MouseButton)button);
         }
 
-        public static bool IsMouseButtonClicked(MouseButton button)
+        public static bool IsMouseButtonClicked(Mouse button)
         {
-            return Raylib.IsMouseButtonPressed(button);
+            return Raylib.IsMouseButtonPressed((Raylib_cs.MouseButton)button);
         }
 
         public static bool IsMouseOnScreen()

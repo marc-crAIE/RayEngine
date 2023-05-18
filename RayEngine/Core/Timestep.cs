@@ -24,6 +24,7 @@ namespace RayEngine.Core
             Time = time;
         }
 
+        public static implicit operator float(Timestep ts) => (float)ts.Time;
         public static implicit operator double(Timestep ts) => ts.Time;
         public static implicit operator Timestep(double time) => new Timestep(time);
 

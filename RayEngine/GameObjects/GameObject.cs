@@ -7,8 +7,9 @@ namespace RayEngine.GameObjects
 {
     public class GameObject
     {
+        private UUID ID = new UUID();
         public GameObject? Parent { get; private set; } = null;
-        public List<GameObject> Children { get; private set; } = new List<GameObject>();
+        public Dictionary<ulong, GameObject> Children { get; private set; } = new Dictionary<ulong, GameObject>();
         internal EntityRegistry? Registry; // Keeps track of children entities
 
         internal Entity EntityHandle = 0;
@@ -22,7 +23,7 @@ namespace RayEngine.GameObjects
             Scene = SceneManager.GetScene();
             EntityHandle = Scene?.GetRegistry().Create() ?? 0;
 
-            AddComponent<UUID>();
+            AddComponent<UUID>((ulong)ID);
             AddComponent<TagComponent>(tag);
             AddComponent<TransformComponent>();
 
@@ -31,9 +32,9 @@ namespace RayEngine.GameObjects
 
         public void SetParent(ref GameObject parent)
         {
-            Scene?.GameObjects.Remove(GetID());
+            Scene?.GameObjects.Remove(ID);
             Parent = parent;
-            Parent.Children.Add(this);
+            Parent.Children.Add(ID, this);
 
             parent.Registry ??= new EntityRegistry();
 
@@ -46,9 +47,9 @@ namespace RayEngine.GameObjects
 
         public void AddChild(ref GameObject child)
         {
-            Scene?.GameObjects.Remove(child.GetID());
+            Scene?.GameObjects.Remove(child.ID);
+            Children.Add(child.ID, child);
             child.Parent = this;
-            Children.Add(child);
 
             Registry ??= new EntityRegistry();
 
@@ -94,6 +95,16 @@ namespace RayEngine.GameObjects
             if (Parent is not null && Parent.Registry is not null)
                 return ref Parent.Registry.Get<T>(EntityHandle);
             return ref Scene.GetRegistry().Get<T>(EntityHandle);
+        }
+
+        public bool HasComponent<T>()
+        {
+            if (Scene == null)
+                throw new InvalidOperationException("GameObject was not created within a Scene");
+
+            if (Parent is not null && Parent.Registry is not null)
+                return Parent.Registry.Has<T>(EntityHandle);
+            return Scene.GetRegistry().Has<T>(EntityHandle);
         }
 
         internal bool SetScene(Scene scene)
