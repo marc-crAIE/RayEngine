@@ -2,6 +2,8 @@
 using RayEngine.GameObjects.Components;
 using RayEngine.Scenes;
 using SharpECS;
+using SharpMaths;
+using System.Reflection;
 
 namespace RayEngine.GameObjects
 {
@@ -73,12 +75,22 @@ namespace RayEngine.GameObjects
             return ref Scene.GetRegistry().Emplace<T>(EntityHandle, args);
         }
 
+        public ref T AddComponent<T>(in T component)
+        {
+            if (Scene == null)
+                throw new InvalidOperationException("GameObject was not created within a Scene");
+
+            if (Parent is not null && Parent.Registry is not null)
+                return ref Parent.Registry.Add<T>(EntityHandle, component);
+            return ref Scene.GetRegistry().Add<T>(EntityHandle, component);
+        }
+
         public bool RemoveComponent<T>()
         {
             if (Scene == null)
                 throw new InvalidOperationException("GameObject was not created within a Scene");
 
-            T typeCheck = default(T);
+            T? typeCheck = default(T);
             if (typeCheck is UUID || typeCheck is TagComponent || typeCheck is TransformComponent)
                 throw new InvalidOperationException($"Cannot remove {typeof(T)} from GameObject");
 

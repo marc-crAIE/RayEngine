@@ -30,5 +30,7 @@ namespace RayEngine.Core
 
         public double GetSeconds() => Time;
         public double GetMilliseconds() => Time * 1000.0;
+
+        public override string ToString() => Time.ToString();
     }
 }

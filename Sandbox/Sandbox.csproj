@@ -5,7 +5,20 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;Debug With Profiler</Configurations>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug With Profiler|AnyCPU'" />
+
+  <ItemGroup>
+    <None Remove="Assets\Textures\Raylib_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Textures\Raylib_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RayEngine\RayEngine.csproj" />

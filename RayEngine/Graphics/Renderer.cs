@@ -1,4 +1,5 @@
-﻿using RayEngine.Utils;
+﻿using RayEngine.Debug;
+using RayEngine.Utils;
 using Raylib_cs;
 using SharpMaths;
 
@@ -11,6 +12,8 @@ namespace RayEngine.Graphics
 
         public static void Begin()
         {
+            using var _it = Profiler.Function();
+
             if (Rendering)
                 throw new InvalidOperationException("The renderer is already rendering!");
 
@@ -21,6 +24,8 @@ namespace RayEngine.Graphics
 
         public static void End()
         {
+            using var _it = Profiler.Function();
+
             if (!Rendering)
                 throw new InvalidOperationException("The renderer is not currently rendering!");
 

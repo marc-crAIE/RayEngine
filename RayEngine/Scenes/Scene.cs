@@ -1,4 +1,5 @@
 ﻿using RayEngine.Core;
+using RayEngine.Debug;
 using RayEngine.GameObjects;
 using RayEngine.GameObjects.Components;
 using RayEngine.Graphics;
@@ -15,13 +16,22 @@ namespace RayEngine.Scenes
 
         public void OnUpdate(Timestep ts)
         {
+            using var _itSceneUpdate = Profiler.Function();
+
             UpdateGameObjects(ts);
+        }
+
+        public void OnRender()
+        {
+            using var _itSceneRender = Profiler.Function();
 
             RenderGameObjects();
         }
 
         private void UpdateGameObjects(Timestep ts)
         {
+            using var _it = Profiler.Function();
+
             Entity[] scriptEntities = Registry.GetEntities().With<ScriptComponent>().AsArray();
             foreach (Entity entity in scriptEntities)
             {
@@ -41,6 +51,8 @@ namespace RayEngine.Scenes
 
         private void UpdateGameObjectChildren(GameObject gameObject, Timestep ts)
         {
+            using var _it = Profiler.Function();
+
             if (gameObject.Registry is null)
                 return;
 
@@ -57,12 +69,15 @@ namespace RayEngine.Scenes
                     script.OnCreate();
                 }
                 script.OnUpdate(ts);
+
                 UpdateGameObjectChildren(gameObject.Children[id], ts);
             }
         }
 
         private void RenderGameObjects()
         {
+            using var _it = Profiler.Function();
+
             Entity[] entities = Registry.GetEntities().With<SpriteComponent>().AsArray();
             foreach (Entity entity in entities)
             {
@@ -74,6 +89,8 @@ namespace RayEngine.Scenes
 
         private void RenderGameObjectChildren(GameObject gameObject, Matrix4 transform)
         {
+            using var _it = Profiler.Function();
+
             if (gameObject.Registry is null)
                 return;
 
@@ -81,7 +98,7 @@ namespace RayEngine.Scenes
             foreach (Entity entity in entities)
             {
                 Matrix4 childTransform = transform * gameObject.Registry.Get<TransformComponent>(entity);
-                Renderer2D.DrawQuad(childTransform, gameObject.Registry.Get<SpriteComponent>(entity).Colour);
+                Renderer2D.DrawSprite(childTransform, gameObject.Registry.Get<SpriteComponent>(entity));
                 RenderGameObjectChildren(gameObject.Children[gameObject.Registry.Get<UUID>(entity)], childTransform);
             }
         }

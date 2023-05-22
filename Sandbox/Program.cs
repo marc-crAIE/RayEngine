@@ -1,4 +1,5 @@
 ﻿using RayEngine.Core;
+using RayEngine.Debug;
 using RayEngine.GameObjects;
 using RayEngine.GameObjects.Components;
 using RayEngine.Graphics;
@@ -11,12 +12,14 @@ namespace Sandbox
     {
         public SandboxApp(ApplicationSpecification specification) : base(specification)
         {
+            using var _it = Profiler.Function();
+
             Scene scene = new Scene();
             SceneManager.LoadScene(scene);
 
-            GameObject parent = new GameObject();
-            GameObject child1 = new GameObject();
-            GameObject child2 = new GameObject();
+            GameObject parent = new GameObject("Parent");
+            GameObject child1 = new GameObject("Child 1");
+            GameObject child2 = new GameObject("Child 2");
 
             child1.SetParent(ref parent);
             child2.SetParent(ref child1);
@@ -36,7 +39,8 @@ namespace Sandbox
             child2Transform.Rotation = SharpMath.ToRadians(new Vector3(0.0f, 0.0f, 45.0f));
             child2Transform.Scale = new Vector3(1.0f);
 
-            child1.AddComponent<SpriteComponent>(new Colour(255, 0, 0, 255));
+            var child1Sprite = child1.AddComponent<SpriteComponent>(new Colour(255, 0, 0, 255));
+            child1Sprite.Texture = new Texture2D("Assets/Textures/Raylib_icon.png");
             child1.AddComponent<ScriptComponent>().Bind<ChildScript>();
 
             child2.AddComponent<SpriteComponent>(new Colour(0, 0, 255, 255));
@@ -51,8 +55,18 @@ namespace Sandbox
             {
                 Name = "Sandbox App"
             };
+
+            Profiler.BeginSession("Startup", "startup.json");
+
             SandboxApp app = new SandboxApp(spec);
+
+            Profiler.EndSession();
+
+            Profiler.BeginSession("Runtime", "runtime.json");
+
             app.Run();
+
+            Profiler.EndSession();
         }
     }
 }

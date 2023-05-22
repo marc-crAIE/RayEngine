@@ -8,21 +8,20 @@ namespace Sandbox
     internal class ParentScript : ScriptableGameObject
     {
         private float Rotation = 0.0f;
-        private TransformComponent Transform;
+        private TransformComponent _Transform;
 
         public override void OnCreate()
         {
             Console.WriteLine("Hello!");
-
-            Transform = GetComponent<TransformComponent>();
+            _Transform = Transform;
         }
 
         public override void OnUpdate(Timestep ts)
         {
-            Transform.Translation = Input.GetMousePosition();
+            _Transform.Translation = Input.GetMousePosition();
 
             if (Input.IsKeyPressed(Key.KEY_E))
-                Transform.Rotation = new Vector3(0.0f, 0.0f, Rotation += 1.0f * ts);
+                _Transform.Rotation = new Vector3(0.0f, 0.0f, Rotation += 1.0f * ts);
         }
     }
 }

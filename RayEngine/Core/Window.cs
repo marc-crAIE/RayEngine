@@ -1,4 +1,5 @@
-﻿using RayEngine.Events;
+﻿using RayEngine.Debug;
+using RayEngine.Events;
 using Raylib_cs;
 
 namespace RayEngine.Core
@@ -7,12 +8,14 @@ namespace RayEngine.Core
     {
         public string Title;
         public int Width, Height;
+        public short FPSLimit;
 
-        public WindowProps(string title = "RayEngine", int width = 800, int height = 600)
+        public WindowProps(string title = "RayEngine", int width = 800, int height = 600, short fpsLimit = short.MaxValue)
         {
             Title = title;
             Width = width;
             Height = height;
+            FPSLimit = fpsLimit;
         }
     }
 
@@ -28,13 +31,16 @@ namespace RayEngine.Core
 
         public Window(WindowProps props)
         {
+            using var _it = Profiler.Function();
+
             Data = new WindowData();
             Data.Title = props.Title;
             Data.Width = props.Width;
             Data.Height = props.Height;
 
             Raylib.InitWindow(props.Width, props.Height, props.Title);
-            Raylib.SetTargetFPS(60);
+            if (props.FPSLimit != short.MaxValue)
+                Raylib.SetTargetFPS(props.FPSLimit);
 
             Raylib.SetWindowState(ConfigFlags.FLAG_WINDOW_RESIZABLE);
         }
@@ -44,14 +50,20 @@ namespace RayEngine.Core
 
         internal void OnUpdate()
         {
+            using var _it = Profiler.Function();
+
             if (Raylib.WindowShouldClose())
             {
+                using var _itClose = Profiler.Scope("Window Close");
+
                 WindowCloseEvent e = new WindowCloseEvent();
                 Data.EventCallback(e);
             }
 
             if (Raylib.IsWindowResized())
             {
+                using var _itClose = Profiler.Scope("Window Resize");
+
                 Data.Width = Raylib.GetScreenWidth();
                 Data.Height = Raylib.GetScreenHeight();
 

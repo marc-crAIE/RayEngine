@@ -1,4 +1,5 @@
-﻿using RayEngine.Events;
+﻿using RayEngine.Debug;
+using RayEngine.Events;
 using RayEngine.GameObjects;
 using RayEngine.GameObjects.Components;
 using RayEngine.Graphics;
@@ -24,6 +25,8 @@ namespace RayEngine.Core
 
         public Application(ApplicationSpecification specification)
         {
+            using var _it = Profiler.Function();
+
             if (Instance != null)
                 throw new Exception("Application already exists!");
 
@@ -38,30 +41,34 @@ namespace RayEngine.Core
 
         public void Run()
         {
+            using var _itRun = Profiler.Function();
+
             Running = true;
 
             while (Running)
             {
+                using var _itRunLoop = Profiler.Scope("RunLoop");
+
                 double time = Time.GetTime();
                 Timestep ts = time - LastFrameTime;
                 LastFrameTime = time;
 
-                Renderer.Begin();
+                using (var _itUpdate = Profiler.Scope("Update"))
+                {
+                    SceneManager.GetScene()?.OnUpdate(ts);
+                }
 
-                SceneManager.GetScene()?.OnUpdate(ts);
+                using (var _itRaylibRender = Profiler.Scope("Render"))
+                {
+                    Renderer.Begin();
 
-                //Vector3 v = SharpMath.ToRadians(new Vector3(0.0f, 0.0f, angle += 1f));
-                //Matrix4 rotation = new Quaternion(v);
+                    SceneManager.GetScene()?.OnRender();
 
-                //Matrix4 m = Matrix4.Translation(200, 300, 0) * rotation * Matrix4.Scale(new Vector3(200.0f, 150.0f, 1.0f));
-                //Matrix4 m2 = m * Matrix4.Translation(0.5f, 0.5f, 1f);
+                    Raylib.DrawText(Raylib.GetFPS().ToString() + " FPS", 10, 10, 24, Color.RAYWHITE);
+                    Raylib.DrawText($"{(double)ts:0.000} Deltatime", 10, 30, 24, Color.RAYWHITE);
 
-                //Renderer2D.DrawQuad(m, new Vector4(1.0f));
-                //Renderer2D.DrawQuad(m2, new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-
-                Raylib.DrawText(Raylib.GetFPS().ToString() + " FPS", 10, 10, 24, Color.RAYWHITE);
-
-                Renderer.End();
+                    Renderer.End();
+                }
 
                 AppWindow.OnUpdate();
             }

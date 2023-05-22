@@ -1,4 +1,6 @@
 ﻿using RayEngine.Core;
+using RayEngine.GameObjects.Components;
+using SharpMaths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,20 @@ namespace RayEngine.GameObjects
     public class ScriptableGameObject
     {
         internal GameObject? GameObject;
+
+        #region Properties
+
+        protected TransformComponent Transform
+        {
+            get
+            {
+                return GetComponent<TransformComponent>();
+            }
+        }
+
+        #endregion
+
+        #region Component Functions
 
         protected ref T AddComponent<T>(params object[] args)
         {
@@ -42,6 +58,8 @@ namespace RayEngine.GameObjects
 
             return GameObject.HasComponent<T>();
         }
+
+        #endregion
 
         public virtual void OnCreate() { }
         public virtual void OnDestroy() { }

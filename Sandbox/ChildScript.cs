@@ -8,19 +8,19 @@ namespace Sandbox
     internal class ChildScript : ScriptableGameObject
     {
         private float RotationAngle = 0.0f;
-        private TransformComponent Transform;
+        private TransformComponent _Transform;
 
         public override void OnCreate()
         {
             Console.WriteLine("I am a child!");
-            Transform = GetComponent<TransformComponent>();
+            _Transform = Transform;
         }
 
         public override void OnUpdate(Timestep ts)
         {
             if (Input.IsKeyPressed(Key.KEY_R))
             {
-                Transform.Rotation = new Vector3(0.0f, 0.0f, RotationAngle += 2.0f * ts);
+                _Transform.Rotation = new Vector3(0.0f, 0.0f, RotationAngle += 2.0f * ts);
             }
         }
     }
