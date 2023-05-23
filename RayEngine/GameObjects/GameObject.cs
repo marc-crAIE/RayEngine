@@ -16,6 +16,7 @@ namespace RayEngine.GameObjects
 
         internal Entity EntityHandle = 0;
         private Scene? Scene = null;
+        internal int LayerID = 0;
 
         public GameObject(string tag = "GameObject")
         {
