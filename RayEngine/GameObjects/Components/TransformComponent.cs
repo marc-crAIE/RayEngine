@@ -12,7 +12,7 @@ namespace RayEngine.GameObjects.Components
     {
         public Vector3 Translation = new Vector3();
         public Vector3 Rotation = new Vector3();
-        public Vector3 Scale = new Vector3(10.0f);
+        public Vector3 Scale = new Vector3(1.0f);
 
         public Matrix4 GetTransform()
         {

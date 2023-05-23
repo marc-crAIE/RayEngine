@@ -14,6 +14,11 @@ namespace RayEngine.Scenes
         internal Dictionary<ulong, GameObject> GameObjects = new Dictionary<ulong, GameObject>();
         private EntityRegistry Registry = new EntityRegistry();
 
+        private Layers Layers = new Layers();
+
+        public delegate void OnImGUIRenderFunc();
+        public OnImGUIRenderFunc? OnImGUIRender { internal get; set; }
+
         public void OnUpdate(Timestep ts)
         {
             using var _itSceneUpdate = Profiler.Function();
@@ -32,20 +37,23 @@ namespace RayEngine.Scenes
         {
             using var _it = Profiler.Function();
 
-            Entity[] scriptEntities = Registry.GetEntities().With<ScriptComponent>().AsArray();
-            foreach (Entity entity in scriptEntities)
+            foreach (GameObject gameObject in GameObjects.Values)
             {
-                UUID id = Registry.Get<UUID>(entity);
-                ScriptableGameObject? script = Registry.Get<ScriptComponent>(entity).Instance;
-                if (script is null)
-                    continue;
-                if (script.GameObject is null)
+                if (gameObject.HasComponent<ScriptComponent>() && Layers.IsLayerEnabled(gameObject.LayerID))
                 {
-                    script.GameObject = GameObjects[id];
-                    script.OnCreate();
+                    UUID id = Registry.Get<UUID>(gameObject.EntityHandle);
+                    ScriptableGameObject? script = Registry.Get<ScriptComponent>(gameObject.EntityHandle).Instance;
+                    if (script is null)
+                        continue;
+                    if (script.GameObject is null)
+                    {
+                        script.GameObject = GameObjects[id];
+                        script.OnCreate();
+                    }
+                    script.OnUpdate(ts);
                 }
-                script.OnUpdate(ts);
-                UpdateGameObjectChildren(GameObjects[id], ts);
+
+                UpdateGameObjectChildren(gameObject, ts);
             }
         }
 
@@ -56,21 +64,23 @@ namespace RayEngine.Scenes
             if (gameObject.Registry is null)
                 return;
 
-            Entity[] scriptEntities = gameObject.Registry.GetEntities().With<ScriptComponent>().AsArray();
-            foreach (Entity entity in scriptEntities)
+            foreach (GameObject child in gameObject.Children.Values)
             {
-                UUID id = gameObject.Registry.Get<UUID>(entity);
-                ScriptableGameObject? script = gameObject.Registry.Get<ScriptComponent>(entity).Instance;
-                if (script is null)
-                    continue;
-                if (script.GameObject is null)
+                if (child.HasComponent<ScriptComponent>() && Layers.IsLayerEnabled(gameObject.LayerID))
                 {
-                    script.GameObject = gameObject.Children[id];
-                    script.OnCreate();
+                    UUID id = gameObject.Registry.Get<UUID>(child.EntityHandle);
+                    ScriptableGameObject? script = gameObject.Registry.Get<ScriptComponent>(child.EntityHandle).Instance;
+                    if (script is null)
+                        continue;
+                    if (script.GameObject is null)
+                    {
+                        script.GameObject = gameObject.Children[id];
+                        script.OnCreate();
+                    }
+                    script.OnUpdate(ts);
                 }
-                script.OnUpdate(ts);
 
-                UpdateGameObjectChildren(gameObject.Children[id], ts);
+                UpdateGameObjectChildren(child, ts);
             }
         }
 
@@ -78,12 +88,14 @@ namespace RayEngine.Scenes
         {
             using var _it = Profiler.Function();
 
-            Entity[] entities = Registry.GetEntities().With<SpriteComponent>().AsArray();
-            foreach (Entity entity in entities)
+            foreach (GameObject gameObject in GameObjects.Values)
             {
-                Matrix4 transform = Registry.Get<TransformComponent>(entity);
-                Renderer2D.DrawQuad(transform, Registry.Get<SpriteComponent>(entity).Colour);
-                RenderGameObjectChildren(GameObjects[Registry.Get<UUID>(entity)], transform);
+                Matrix4 transform = Registry.Get<TransformComponent>(gameObject.EntityHandle);
+                if (gameObject.HasComponent<SpriteComponent>() && Layers.IsLayerEnabled(gameObject.LayerID))
+                {
+                    Renderer2D.DrawQuad(transform, Registry.Get<SpriteComponent>(gameObject.EntityHandle).Colour);
+                }
+                RenderGameObjectChildren(gameObject, transform);
             }
         }
 
@@ -94,14 +106,18 @@ namespace RayEngine.Scenes
             if (gameObject.Registry is null)
                 return;
 
-            Entity[] entities = gameObject.Registry.GetEntities().With<SpriteComponent>().AsArray();
-            foreach (Entity entity in entities)
+            foreach (GameObject child in gameObject.Children.Values)
             {
-                Matrix4 childTransform = transform * gameObject.Registry.Get<TransformComponent>(entity);
-                Renderer2D.DrawSprite(childTransform, gameObject.Registry.Get<SpriteComponent>(entity));
-                RenderGameObjectChildren(gameObject.Children[gameObject.Registry.Get<UUID>(entity)], childTransform);
+                Matrix4 childTransform = transform * gameObject.Registry.Get<TransformComponent>(child.EntityHandle);
+                if (gameObject.HasComponent<SpriteComponent>() && Layers.IsLayerEnabled(gameObject.LayerID))
+                {
+                    Renderer2D.DrawSprite(childTransform, gameObject.Registry.Get<SpriteComponent>(child.EntityHandle));
+                }
+                RenderGameObjectChildren(child, childTransform);
             }
         }
+
+        public ref Layers GetLayers() => ref Layers;
 
         internal ref EntityRegistry GetRegistry() => ref Registry;
     }

@@ -3,6 +3,7 @@ using RayEngine.Events;
 using RayEngine.GameObjects;
 using RayEngine.GameObjects.Components;
 using RayEngine.Graphics;
+using RayEngine.ImGUI;
 using RayEngine.Scenes;
 using Raylib_cs;
 using SharpMaths;
@@ -12,6 +13,16 @@ namespace RayEngine.Core
     public struct ApplicationSpecification
     {
         public string Name;
+        public int Width, Height;
+
+        public ApplicationSpecification() : this("RayEngine Application") { }
+
+        public ApplicationSpecification(string name, int width = 1200, int height = 800)
+        {
+            Name = name;
+            Width = width;
+            Height = height;
+        }
     }
 
     public abstract class Application
@@ -33,11 +44,11 @@ namespace RayEngine.Core
             Instance = this;
             Specification = specification;
 
-            AppWindow = new Window(new WindowProps(specification.Name, 1200, 800));
+            AppWindow = new Window(new WindowProps(specification.Name, specification.Width, specification.Height));
             AppWindow.SetEventCallback(OnEvent);
-        }
 
-        float angle = 0.0f;
+            ImGuiContext.Setup();
+        }
 
         public void Run()
         {
@@ -53,19 +64,30 @@ namespace RayEngine.Core
                 Timestep ts = time - LastFrameTime;
                 LastFrameTime = time;
 
+                Scene? scene = SceneManager.GetScene();
+
                 using (var _itUpdate = Profiler.Scope("Update"))
                 {
-                    SceneManager.GetScene()?.OnUpdate(ts);
+                    scene?.OnUpdate(ts);
                 }
 
                 using (var _itRaylibRender = Profiler.Scope("Render"))
                 {
                     Renderer.Begin();
 
-                    SceneManager.GetScene()?.OnRender();
+                    scene?.OnRender();
 
                     Raylib.DrawText(Raylib.GetFPS().ToString() + " FPS", 10, 10, 24, Color.RAYWHITE);
                     Raylib.DrawText($"{(double)ts:0.000} Deltatime", 10, 30, 24, Color.RAYWHITE);
+
+                    ImGuiContext.Begin();
+
+                    if (scene?.OnImGUIRender is not null && scene.GetLayers().IsLayerEnabled("ImGUI"))
+                        scene.OnImGUIRender();
+
+                    //ImGuiNET.ImGui.ShowDemoWindow();
+
+                    ImGuiContext.End();
 
                     Renderer.End();
                 }
