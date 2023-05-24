@@ -32,10 +32,17 @@ namespace RayEngine.Graphics
         public Texture2D(string filepath) : base(filepath)
         {
             using var _it = Profiler.Function();
+            if (filepath == "")
+                return;
+            if (!File.Exists(filepath))
+            {
+                Console.WriteLine("Texture filepath does not exist!");
+                return;
+            }
             Texture = Raylib_cs.Raylib.LoadTexture(filepath);
         }
 
-        public Texture2D(Raylib_cs.Texture2D texture) : this(texture.GetType().ToString())
+        public Texture2D(Raylib_cs.Texture2D texture) : this("")
         {
             using var _it = Profiler.Function();
             Texture = texture;
