@@ -2,7 +2,7 @@
 {
     public class TagComponent
     {
-        public string Tag { get; set; }
+        public string Tag;
 
         public TagComponent()
         {

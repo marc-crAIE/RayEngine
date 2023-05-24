@@ -11,11 +11,11 @@ namespace RayEngine.GameObjects
     {
         private UUID ID = new UUID();
         public GameObject? Parent { get; private set; } = null;
-        public Dictionary<ulong, GameObject> Children { get; private set; } = new Dictionary<ulong, GameObject>();
+        internal Dictionary<ulong, GameObject> Children { get; private set; } = new Dictionary<ulong, GameObject>();
         internal EntityRegistry? Registry; // Keeps track of children entities
 
         internal Entity EntityHandle = 0;
-        private Scene? Scene = null;
+        internal Scene? Scene = null;
         internal int LayerID = 0;
 
         public GameObject(string tag = "GameObject")
@@ -127,5 +127,7 @@ namespace RayEngine.GameObjects
             Scene = scene;
             return true;
         }
+
+        public GameObject[] GetChildren() => Children.Values.ToArray();
     }
 }

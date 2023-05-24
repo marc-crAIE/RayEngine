@@ -41,7 +41,7 @@ namespace RayEngine.Graphics
             {
                 Rectangle src = new Rectangle(0, 0, texture.GetWidth(), texture.GetHeight());
                 Rectangle dst = new Rectangle(translation.x, translation.y, scale.x, scale.y);
-                Raylib.DrawTexturePro(texture.Texture, src, dst, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation, colour.ToColor());
+                Raylib.DrawTexturePro(texture, src, dst, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation, colour.ToColor());
             }
             else
             {

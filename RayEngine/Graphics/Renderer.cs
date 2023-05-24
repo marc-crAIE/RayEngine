@@ -32,5 +32,7 @@ namespace RayEngine.Graphics
             Raylib.EndDrawing();
             Rendering = false;
         }
+
+        public static int GetFPS() => Raylib.GetFPS();
     }
 }

@@ -77,17 +77,15 @@ namespace RayEngine.Core
 
                     scene?.OnRender();
 
-                    Raylib.DrawText(Raylib.GetFPS().ToString() + " FPS", 10, 10, 24, Color.RAYWHITE);
-                    Raylib.DrawText($"{(double)ts:0.000} Deltatime", 10, 30, 24, Color.RAYWHITE);
+                    using (var _itImGuiRender = Profiler.Scope("ImGuiRender"))
+                    {
+                        ImGuiContext.Begin();
 
-                    ImGuiContext.Begin();
+                        if (scene?.OnImGUIRender is not null && scene.GetLayers().IsLayerEnabled("ImGUI"))
+                            scene.OnImGUIRender();
 
-                    if (scene?.OnImGUIRender is not null && scene.GetLayers().IsLayerEnabled("ImGUI"))
-                        scene.OnImGUIRender();
-
-                    //ImGuiNET.ImGui.ShowDemoWindow();
-
-                    ImGuiContext.End();
+                        ImGuiContext.End();
+                    }
 
                     Renderer.End();
                 }
@@ -95,6 +93,7 @@ namespace RayEngine.Core
                 AppWindow.OnUpdate();
             }
 
+            ImGuiContext.Shutdown();
             AppWindow.Close();
         }
 

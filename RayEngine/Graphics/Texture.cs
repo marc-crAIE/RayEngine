@@ -17,6 +17,7 @@ namespace RayEngine.Graphics
 
         public abstract int GetWidth();
         public abstract int GetHeight();
+        public abstract ref uint GetID();
 
         public abstract void Dispose();
     }

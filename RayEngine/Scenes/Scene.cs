@@ -118,6 +118,7 @@ namespace RayEngine.Scenes
         }
 
         public ref Layers GetLayers() => ref Layers;
+        public GameObject[] GetGameObjects() => GameObjects.Values.ToArray();
 
         internal ref EntityRegistry GetRegistry() => ref Registry;
     }

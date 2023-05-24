@@ -26,5 +26,6 @@ namespace RayEngine.Core
         public static implicit operator ulong(UUID uuid) => uuid._UUID;
 
         public override int GetHashCode() => _UUID.GetHashCode();
+        public override string ToString() => _UUID.ToString();
     }
 }

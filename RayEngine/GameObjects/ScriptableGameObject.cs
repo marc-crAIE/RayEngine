@@ -1,5 +1,6 @@
 ﻿using RayEngine.Core;
 using RayEngine.GameObjects.Components;
+using RayEngine.Scenes;
 using SharpMaths;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace RayEngine.GameObjects
         internal GameObject? GameObject;
 
         #region Properties
+
+        protected Scene Scene { get => GameObject.Scene; }
 
         protected TransformComponent Transform
         {

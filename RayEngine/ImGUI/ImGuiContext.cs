@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace RayEngine.ImGUI
 {
-    internal class ImGuiContext
+    public class ImGuiContext
     {
         internal static IntPtr Context = IntPtr.Zero;
         private static ImGuiMouseCursor CurrentMouseCursor = ImGuiMouseCursor.COUNT;
@@ -15,16 +15,14 @@ namespace RayEngine.ImGUI
         private static Dictionary<ImGuiMouseCursor, MouseCursor> MouseCursorMap = new Dictionary<ImGuiMouseCursor, MouseCursor>();
         private static Key[]? KeyMap;
 
-        private static Texture2D FontTexture;
+        private static Graphics.Texture2D FontTexture;
 
-        public static void Setup(bool darkTheme = true)
+        internal static void Setup(bool darkTheme = true)
         {
             using var _it = Profiler.Function();
 
             MouseCursorMap = new Dictionary<ImGuiMouseCursor, MouseCursor>();
             KeyMap = Enum.GetValues(typeof(Key)) as Key[];
-
-            FontTexture.id = 0;
 
             BeginImGuiInit();
 
@@ -36,7 +34,7 @@ namespace RayEngine.ImGUI
             EndImGuiInit();
         }
 
-        public static void BeginImGuiInit()
+        internal static void BeginImGuiInit()
         {
             using var _it = Profiler.Function();
 
@@ -44,7 +42,7 @@ namespace RayEngine.ImGUI
             var io = ImGui.GetIO();
         }
 
-        public static void EndImGuiInit()
+        internal static void EndImGuiInit()
         {
             using var _it = Profiler.Function();
 
@@ -71,7 +69,7 @@ namespace RayEngine.ImGUI
             MouseCursorMap[ImGuiMouseCursor.NotAllowed] =   MouseCursor.MOUSE_CURSOR_NOT_ALLOWED;
         }
 
-        public static unsafe void ReloadFonts()
+        private static unsafe void ReloadFonts()
         {
             using var _it = Profiler.Function();
 
@@ -92,7 +90,7 @@ namespace RayEngine.ImGUI
 
             FontTexture = Raylib.LoadTextureFromImage(image);
 
-            io.Fonts.SetTexID(new IntPtr(FontTexture.id));
+            io.Fonts.SetTexID(new IntPtr(FontTexture.ID));
         }
 
         private static void SetupKeyMap()
@@ -208,7 +206,7 @@ namespace RayEngine.ImGUI
             }
         }
 
-        public static void Begin()
+        internal static void Begin()
         {
             using var _it = Profiler.Function();
 
@@ -308,7 +306,7 @@ namespace RayEngine.ImGUI
             Rlgl.rlEnableBackfaceCulling();
         }
 
-        public static void End()
+        internal static void End()
         {
             using var _it = Profiler.Function();
 
@@ -317,7 +315,7 @@ namespace RayEngine.ImGUI
             RenderData();
         }
 
-        public static void Shutdown()
+        internal static void Shutdown()
         {
             using var _it = Profiler.Function();
 
@@ -325,49 +323,49 @@ namespace RayEngine.ImGUI
             ImGui.DestroyContext();
         }
 
-        public static void Image(Texture2D image)
+        public static void Image(Graphics.Texture2D image)
         {
-            ImGui.Image(new IntPtr(image.id), new Vector2(image.width, image.height));
+            ImGui.Image(new IntPtr(image.ID), new Vector2(image.Width, image.Height));
         }
 
-        public static void ImageSize(Texture2D image, int width, int height)
+        public static void ImageSize(Graphics.Texture2D image, int width, int height)
         {
-            ImGui.Image(new IntPtr(image.id), new Vector2(width, height));
+            ImGui.Image(new IntPtr(image.ID), new Vector2(width, height));
         }
 
-        public static void ImageSize(Texture2D image, Vector2 size)
+        public static void ImageSize(Graphics.Texture2D image, Vector2 size)
         {
-            ImGui.Image(new IntPtr(image.id), size);
+            ImGui.Image(new IntPtr(image.ID), size);
         }
 
-        public static void ImageRect(Texture2D image, int destWidth, int destHeight, Rectangle sourceRect)
+        public static void ImageRect(Graphics.Texture2D image, int destWidth, int destHeight, Rectangle sourceRect)
         {
             Vector2 uv0 = new Vector2();
             Vector2 uv1 = new Vector2();
 
             if (sourceRect.width < 0)
             {
-                uv0.x = -(sourceRect.x / image.width);
-                uv1.x = (uv0.x - (float)(Math.Abs(sourceRect.width) / image.width));
+                uv0.x = -(sourceRect.x / image.Width);
+                uv1.x = (uv0.x - (float)(Math.Abs(sourceRect.width) / image.Width));
             }
             else
             {
-                uv0.x = sourceRect.x / image.width;
-                uv1.x = uv0.x + (float)(sourceRect.width / image.width);
+                uv0.x = sourceRect.x / image.Width;
+                uv1.x = uv0.x + (float)(sourceRect.width / image.Width);
             }
 
             if (sourceRect.height < 0)
             {
-                uv0.y = -(sourceRect.y / image.height);
-                uv1.y = (uv0.y - (float)(Math.Abs(sourceRect.height) / image.height));
+                uv0.y = -(sourceRect.y / image.Height);
+                uv1.y = (uv0.y - (float)(Math.Abs(sourceRect.height) / image.Height));
             }
             else
             {
-                uv0.y = sourceRect.y / image.height;
-                uv1.y = uv0.y + (float)(sourceRect.height / image.height);
+                uv0.y = sourceRect.y / image.Height;
+                uv1.y = uv0.y + (float)(sourceRect.height / image.Height);
             }
 
-            ImGui.Image(new IntPtr(image.id), new Vector2(destWidth, destHeight), uv0, uv1);
+            ImGui.Image(new IntPtr(image.ID), new Vector2(destWidth, destHeight), uv0, uv1);
         }
     }
 }

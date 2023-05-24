@@ -3,7 +3,7 @@ using RayEngine.GameObjects;
 using RayEngine.GameObjects.Components;
 using SharpMaths;
 
-namespace Sandbox
+namespace Sandbox.Assets.Scripts
 {
     internal class ParentScript : ScriptableGameObject
     {
