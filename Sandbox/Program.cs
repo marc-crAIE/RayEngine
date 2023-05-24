@@ -35,7 +35,7 @@ namespace Sandbox
             child2.SetParent(ref child1);
             child3.SetParent(ref child2);
 
-            parent.AddComponent<SpriteComponent>(new Colour(255, 0, 255, 255));
+            //parent.AddComponent<SpriteComponent>(new Colour(255, 0, 255, 255));
             var parentTransform = parent.GetComponent<TransformComponent>();
             parentTransform.Translation = new Vector3(10, 10, 0);
             parentTransform.Scale = new Vector3(30.0f);

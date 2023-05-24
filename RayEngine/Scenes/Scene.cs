@@ -109,7 +109,7 @@ namespace RayEngine.Scenes
             foreach (GameObject child in gameObject.Children.Values)
             {
                 Matrix4 childTransform = transform * gameObject.Registry.Get<TransformComponent>(child.EntityHandle);
-                if (gameObject.HasComponent<SpriteComponent>() && Layers.IsLayerEnabled(gameObject.LayerID))
+                if (child.HasComponent<SpriteComponent>() && Layers.IsLayerEnabled(child.LayerID))
                 {
                     Renderer2D.DrawSprite(childTransform, gameObject.Registry.Get<SpriteComponent>(child.EntityHandle));
                 }
