@@ -97,6 +97,8 @@ namespace RayEngine.Core
             AppWindow.Close();
         }
 
+        public ref Window GetWindow() => ref AppWindow;
+
         internal void OnEvent(Event e)
         {
             EventDispatcher.Dispatch<WindowCloseEvent>(ref e, OnWindowClose);

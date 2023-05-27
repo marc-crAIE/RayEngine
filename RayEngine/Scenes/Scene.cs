@@ -37,8 +37,9 @@ namespace RayEngine.Scenes
         {
             using var _it = Profiler.Function();
 
-            foreach (GameObject gameObject in GameObjects.Values)
+            for (int i = 0; i < GameObjects.Count; i++)
             {
+                GameObject gameObject = GameObjects.Values.ElementAt(i);
                 if (gameObject.HasComponent<ScriptComponent>() && Layers.IsLayerEnabled(gameObject.LayerID))
                 {
                     UUID id = Registry.Get<UUID>(gameObject.EntityHandle);
@@ -119,6 +120,16 @@ namespace RayEngine.Scenes
 
         public ref Layers GetLayers() => ref Layers;
         public GameObject[] GetGameObjects() => GameObjects.Values.ToArray();
+
+        public GameObject? GetWithTag(string tag)
+        {
+            foreach (GameObject gameObject in GameObjects.Values)
+            {
+                if (gameObject.GetTag() == tag)
+                    return gameObject;
+            }
+            return null;
+        }
 
         internal ref EntityRegistry GetRegistry() => ref Registry;
     }

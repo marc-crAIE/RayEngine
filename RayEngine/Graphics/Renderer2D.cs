@@ -24,29 +24,24 @@ namespace RayEngine.Graphics
         {
             using var _it = Profiler.Function();
 
-            Vector3 scale = new Vector3(
-                ((Vector3)transform[0]).Magnitude(), 
-                ((Vector3)transform[1]).Magnitude(), 
-                ((Vector3)transform[2]).Magnitude());
-
-            Matrix3 rotationMatrix = (Matrix3)transform;
-            rotationMatrix[0] /= scale.x;
-            rotationMatrix[1] /= scale.y;
-            rotationMatrix[2] /= scale.z;
-            float rotation = SharpMath.ToDegrees((float)Math.Atan2(rotationMatrix[0].y, rotationMatrix[0].x));
-
-            Vector2 translation = transform[3];
+            (var translation, var rotation, var scale) = RMath.GetTransformRotationScale(transform);
 
             if (texture is not null)
             {
+
                 Rectangle src = new Rectangle(0, 0, texture.GetWidth(), texture.GetHeight());
                 Rectangle dst = new Rectangle(translation.x, translation.y, scale.x, scale.y);
-                Raylib.DrawTexturePro(texture, src, dst, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation, colour.ToColor());
+                Raylib.DrawTexturePro(texture, src, dst, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
             }
             else
             {
+                (var t, var r, var s) = RMath.GetTransformRotationScale(transform);
+                translation = t;
+                rotation = SharpMath.ToDegrees(rotation);
+                scale = s;
+
                 Rectangle rect = new Rectangle(translation.x, translation.y, scale.x, scale.y);
-                Raylib.DrawRectanglePro(rect, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation, colour.ToColor());
+                Raylib.DrawRectanglePro(rect, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
             }
         }
 

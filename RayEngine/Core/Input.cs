@@ -10,12 +10,12 @@ namespace RayEngine.Core
             return Raylib.IsKeyDown((Raylib_cs.KeyboardKey)key);
         }
 
-        public static bool IsKeyTyped(KeyboardKey key)
+        public static bool IsKeyTyped(Key key)
         {
             return Raylib.IsKeyPressed((Raylib_cs.KeyboardKey)key);
         }
 
-        public static bool IsKeyReleased(KeyboardKey key)
+        public static bool IsKeyReleased(Key key)
         {
             return Raylib.IsKeyReleased((Raylib_cs.KeyboardKey)key);
         }
