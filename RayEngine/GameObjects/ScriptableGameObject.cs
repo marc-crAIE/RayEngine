@@ -16,6 +16,8 @@ namespace RayEngine.GameObjects
 
         #region Properties
 
+        protected GameObject Self { get => GameObject; }
+
         protected Scene Scene { get => GameObject.Scene; }
 
         protected TransformComponent Transform

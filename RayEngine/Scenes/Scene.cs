@@ -118,6 +118,11 @@ namespace RayEngine.Scenes
             }
         }
 
+        public void RemoveGameObject(GameObject gameObject)
+        {
+            GameObjects.Remove(gameObject.GetID());
+        }
+
         public ref Layers GetLayers() => ref Layers;
         public GameObject[] GetGameObjects() => GameObjects.Values.ToArray();
 
