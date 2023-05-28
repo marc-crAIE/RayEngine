@@ -129,5 +129,15 @@ namespace RayEngine.GameObjects
         }
 
         public GameObject[] GetChildren() => Children.Values.ToArray();
+
+        public GameObject? GetChildrenWithTag(string tag)
+        {
+            foreach (GameObject gameObject in Children.Values)
+            {
+                if (gameObject.GetTag() == tag)
+                    return gameObject;
+            }
+            return null;
+        }
     }
 }

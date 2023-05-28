@@ -8,7 +8,7 @@ namespace RayEngine.Graphics
 {
     public abstract class Texture : IDisposable
     {
-        private string Filepath { get; init; }
+        public string Filepath { get; init; }
 
         public Texture(string filepath)
         {
