@@ -94,7 +94,7 @@ namespace RayEngine.Scenes
                 Matrix4 transform = Registry.Get<TransformComponent>(gameObject.EntityHandle);
                 if (gameObject.HasComponent<SpriteComponent>() && Layers.IsLayerEnabled(gameObject.LayerID))
                 {
-                    Renderer2D.DrawQuad(transform, Registry.Get<SpriteComponent>(gameObject.EntityHandle).Colour);
+                    Renderer2D.DrawSprite(transform, Registry.Get<SpriteComponent>(gameObject.EntityHandle));
                 }
                 RenderGameObjectChildren(gameObject, transform);
             }

@@ -25,21 +25,16 @@ namespace RayEngine.Graphics
             using var _it = Profiler.Function();
 
             (var translation, var rotation, var scale) = RMath.GetTransformRotationScale(transform);
+            rotation = SharpMath.ToDegrees(rotation);
 
             if (texture is not null)
             {
-
                 Rectangle src = new Rectangle(0, 0, texture.GetWidth(), texture.GetHeight());
                 Rectangle dst = new Rectangle(translation.x, translation.y, scale.x, scale.y);
                 Raylib.DrawTexturePro(texture, src, dst, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
             }
             else
             {
-                (var t, var r, var s) = RMath.GetTransformRotationScale(transform);
-                translation = t;
-                rotation = SharpMath.ToDegrees(rotation);
-                scale = s;
-
                 Rectangle rect = new Rectangle(translation.x, translation.y, scale.x, scale.y);
                 Raylib.DrawRectanglePro(rect, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
             }

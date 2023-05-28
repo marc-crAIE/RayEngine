@@ -36,7 +36,7 @@ namespace RayEngine.Graphics
                 return;
             if (!File.Exists(filepath))
             {
-                Console.WriteLine("Texture filepath does not exist!");
+                Console.WriteLine($"Texture \"{filepath}\" does not exist!");
                 return;
             }
             Texture = Raylib_cs.Raylib.LoadTexture(filepath);
