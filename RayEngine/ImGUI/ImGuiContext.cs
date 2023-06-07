@@ -5,6 +5,8 @@ using Raylib_cs;
 using SharpMaths;
 using System.Runtime.InteropServices;
 
+using Rectangle = SharpMaths.Rectangle;
+
 namespace RayEngine.ImGUI
 {
     public class ImGuiContext
@@ -346,7 +348,7 @@ namespace RayEngine.ImGUI
             if (sourceRect.width < 0)
             {
                 uv0.x = -(sourceRect.x / image.Width);
-                uv1.x = (uv0.x - (float)(Math.Abs(sourceRect.width) / image.Width));
+                uv1.x = (uv0.x - (MathF.Abs(sourceRect.width) / image.Width));
             }
             else
             {
@@ -357,7 +359,7 @@ namespace RayEngine.ImGUI
             if (sourceRect.height < 0)
             {
                 uv0.y = -(sourceRect.y / image.Height);
-                uv1.y = (uv0.y - (float)(Math.Abs(sourceRect.height) / image.Height));
+                uv1.y = (uv0.y - (MathF.Abs(sourceRect.height) / image.Height));
             }
             else
             {

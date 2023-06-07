@@ -29,5 +29,15 @@ namespace RayEngine.Utils
         {
             return new Colour(colour.r, colour.g, colour.b, colour.a);
         }
+
+        public static Raylib_cs.Rectangle ToRLRectangle(this SharpMaths.Rectangle rect)
+        {
+            return new Raylib_cs.Rectangle(rect.x, rect.y, rect.width, rect.height);
+        }
+
+        public static SharpMaths.Rectangle ToRectangle(this Raylib_cs.Rectangle rect)
+        {
+            return new SharpMaths.Rectangle(rect.x, rect.y, rect.width, rect.height);
+        }
     }
 }

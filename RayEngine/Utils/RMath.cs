@@ -22,7 +22,7 @@ namespace RayEngine.Utils
             rm[0] /= scale.x != 0 ? scale.x : 1.0f;
             rm[1] /= scale.y != 0 ? scale.y : 1.0f;
             rm[2] /= scale.z != 0 ? scale.z : 1.0f;
-                        
+            
             Vector3 rotation = GetEulerFromRotationMatrix(rm);
 
             Vector3 translation = transform[3];
@@ -34,16 +34,16 @@ namespace RayEngine.Utils
         {
             float rx, ry, rz;
 
-            if (rm[0, 2] != Math.Abs(1))
+            if (rm[0, 2] != 1)
             {
-                float pitch1 = -(float)Math.Asin(rm[0, 2]);
-                float pitch2 = (float)Math.PI - pitch1;
-                float cosPitch1 = (float)Math.Cos(pitch1);
-                float cosPitch2 = (float)Math.Cos(pitch2);
-                float roll1 = (float)Math.Atan2(rm[1, 2] / cosPitch1, rm[2, 2] / cosPitch1);
-                float roll2 = (float)Math.Atan2(rm[1, 2] / cosPitch2, rm[2, 2] / cosPitch2);
-                float yaw1 = (float)Math.Atan2(rm[0, 1] / cosPitch1, rm[0, 0] / cosPitch1);
-                float yaw2 = (float)Math.Atan2(rm[0, 1] / cosPitch2, rm[0, 0] / cosPitch2);
+                float pitch1 = -MathF.Asin(rm[0, 2]);
+                float pitch2 = MathF.PI - pitch1;
+                float cosPitch1 = MathF.Cos(pitch1);
+                float cosPitch2 = MathF.Cos(pitch2);
+                float roll1 = MathF.Atan2(rm[1, 2] / cosPitch1, rm[2, 2] / cosPitch1);
+                float roll2 = MathF.Atan2(rm[1, 2] / cosPitch2, rm[2, 2] / cosPitch2);
+                float yaw1 = MathF.Atan2(rm[0, 1] / cosPitch1, rm[0, 0] / cosPitch1);
+                float yaw2 = MathF.Atan2(rm[0, 1] / cosPitch2, rm[0, 0] / cosPitch2);
 
                 rx = roll1;
                 ry = pitch1;
@@ -54,13 +54,13 @@ namespace RayEngine.Utils
                 rz = 0;
                 if (rm[2, 0] == -1)
                 {
-                    rx = rz + (float)Math.Atan2(rm[1, 0], rm[2, 0]);
-                    ry = (float)Math.PI / 2;
+                    rx = rz + MathF.Atan2(rm[1, 0], rm[2, 0]);
+                    ry = MathF.PI / 2;
                 }
                 else
                 {
-                    rx = -rz + (float)Math.Atan2(-rm[1, 0], -rm[2, 0]);
-                    ry = -(float)Math.PI / 2;
+                    rx = -rz + MathF.Atan2(-rm[1, 0], -rm[2, 0]);
+                    ry = -MathF.PI / 2;
                 }
             }
 
@@ -73,7 +73,7 @@ namespace RayEngine.Utils
             float tr = rm[0, 0] + rm[1, 1] + rm[2, 2];
             if (tr > 0)
             {
-                float s = (float)Math.Sqrt(1 + tr) * 2;
+                float s = MathF.Sqrt(1 + tr) * 2;
                 quat.w = 0.25f * s;
                 quat.x = (rm[1, 2] - rm[2, 1]) / s;
                 quat.y = (rm[2, 0] - rm[0, 2]) / s;
@@ -81,7 +81,7 @@ namespace RayEngine.Utils
             }
             else if ((rm[0, 0] > rm[1, 1]) && (rm[0, 0] > rm[2, 2]))
             {
-                float s = (float)Math.Sqrt(1 + rm[0, 0] - rm[1, 1] - rm[2, 2]) * 2;
+                float s = MathF.Sqrt(1 + rm[0, 0] - rm[1, 1] - rm[2, 2]) * 2;
                 quat.w = (rm[1, 2] - rm[2, 1]) / s;
                 quat.x = 0.25f * s;
                 quat.y = (rm[1, 0] + rm[0, 1]) / s;
@@ -89,7 +89,7 @@ namespace RayEngine.Utils
             }
             else if (rm[1, 1] > rm[2, 2])
             {
-                float s = (float)Math.Sqrt(1 + rm[2, 2] - rm[0, 0] - rm[1, 1]) * 2;
+                float s = MathF.Sqrt(1 + rm[2, 2] - rm[0, 0] - rm[1, 1]) * 2;
                 quat.w = (rm[2, 0] - rm[1, 0]) / s;
                 quat.x = (rm[1, 0] + rm[0, 1]) / s;
                 quat.y = 0.25f * s;
@@ -97,7 +97,7 @@ namespace RayEngine.Utils
             }
             else
             {
-                float s = (float)Math.Sqrt(1 + rm[2, 2] - rm[0, 0] - rm[1, 1]) * 2;
+                float s = MathF.Sqrt(1 + rm[2, 2] - rm[0, 0] - rm[1, 1]) * 2;
                 quat.w = (rm[0, 1] - rm[1, 0]) / s;
                 quat.x = (rm[2, 0] + rm[0, 2]) / s;
                 quat.y = (rm[2, 1] + rm[1, 2]) / s;
@@ -121,21 +121,21 @@ namespace RayEngine.Utils
             if (test > 0.499f * unit)
             {
                 rotation.x = 0;
-                rotation.y = 2 * (float)Math.Atan2(quat.x, quat.w);
-                rotation.z = (float)Math.PI / 2;
+                rotation.y = 2 * MathF.Atan2(quat.x, quat.w);
+                rotation.z = MathF.PI / 2;
                 return rotation;
             }
             else if (test < -0.499f * unit)
             {
                 rotation.x = 0;
-                rotation.y = -2 * (float)Math.Atan2(quat.x, quat.w);
-                rotation.z = -(float)Math.PI / 2;
+                rotation.y = -2 * MathF.Atan2(quat.x, quat.w);
+                rotation.z = -MathF.PI / 2;
                 return rotation;
             }
             
-            rotation.x = (float)Math.Atan2(2 * quat.x * quat.w - 2 * quat.y * quat.z, -sqx + sqy - sqz + sqw);
-            rotation.y = (float)Math.Atan2(2 * quat.y * quat.w - 2 * quat.x * quat.z, sqx - sqy - sqz + sqw);
-            rotation.z = (float)Math.Asin(2 * test / unit);
+            rotation.x = MathF.Atan2(2 * quat.x * quat.w - 2 * quat.y * quat.z, -sqx + sqy - sqz + sqw);
+            rotation.y = MathF.Atan2(2 * quat.y * quat.w - 2 * quat.x * quat.z, sqx - sqy - sqz + sqw);
+            rotation.z = MathF.Asin(2 * test / unit);
             return rotation;
         }
     }

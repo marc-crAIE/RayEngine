@@ -121,10 +121,13 @@ namespace RayEngine.Scenes
         public void RemoveGameObject(GameObject gameObject)
         {
             GameObjects.Remove(gameObject.GetID());
+            Registry.Destroy(gameObject.EntityHandle);
         }
 
         public ref Layers GetLayers() => ref Layers;
         public GameObject[] GetGameObjects() => GameObjects.Values.ToArray();
+
+        public GameObject? GetWithUUID(UUID uuid) => GameObjects[uuid];
 
         public GameObject? GetWithTag(string tag)
         {
@@ -136,6 +139,6 @@ namespace RayEngine.Scenes
             return null;
         }
 
-        internal ref EntityRegistry GetRegistry() => ref Registry;
+        public ref EntityRegistry GetRegistry() => ref Registry;
     }
 }

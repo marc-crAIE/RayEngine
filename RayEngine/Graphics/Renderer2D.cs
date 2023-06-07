@@ -4,6 +4,8 @@ using RayEngine.Utils;
 using Raylib_cs;
 using SharpMaths;
 
+using Rectangle = SharpMaths.Rectangle;
+
 namespace RayEngine.Graphics
 {
     public static class Renderer2D
@@ -31,12 +33,12 @@ namespace RayEngine.Graphics
             {
                 Rectangle src = new Rectangle(0, 0, texture.GetWidth(), texture.GetHeight());
                 Rectangle dst = new Rectangle(translation.x, translation.y, scale.x, scale.y);
-                Raylib.DrawTexturePro(texture, src, dst, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
+                Raylib.DrawTexturePro(texture, src.ToRLRectangle(), dst.ToRLRectangle(), new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
             }
             else
             {
                 Rectangle rect = new Rectangle(translation.x, translation.y, scale.x, scale.y);
-                Raylib.DrawRectanglePro(rect, new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
+                Raylib.DrawRectanglePro(rect.ToRLRectangle(), new Vector2(scale.x / 2.0f, scale.y / 2.0f), rotation.z, colour.ToColor());
             }
         }
 
