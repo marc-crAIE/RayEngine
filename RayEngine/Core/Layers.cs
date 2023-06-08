@@ -9,8 +9,8 @@ namespace RayEngine.Core
 {
     public struct Layer
     {
-        int LayerID;
-        Layers? Owner;
+        private int LayerID;
+        private Layers? Owner;
 
         internal Layer(Layers? owner, int layerID)
         {
@@ -20,6 +20,9 @@ namespace RayEngine.Core
 
         public void Enable(bool enabled = true) => Owner?.SetLayer(LayerID, enabled);
         public bool IsEnabled() => Owner is not null ? Owner.IsLayerEnabled(LayerID) : false;
+
+        public int GetID() => LayerID;
+        public Layers? GetOwner() => Owner;
     }
 
     public class Layers
@@ -27,7 +30,7 @@ namespace RayEngine.Core
         private uint EnabledLayers = 0b1;
         private Dictionary<string, int> LayerNames = new Dictionary<string, int>();
 
-        private const int MaxLayers = 31;
+        private const int MaxLayers = 32;
 
         public Layers()
         {
@@ -35,20 +38,21 @@ namespace RayEngine.Core
             AddLayerName("ImGUI", 1);
         }
 
-        public void AddLayerName(string name, int layerID)
+        public Layer AddLayerName(string name, int layerID)
         {
-            if (ValidLayer(layerID))
+            if (!ValidLayer(layerID))
             {
                 // TODO: MAKE A FRIGGEN LOGGER
                 Console.WriteLine($"Layer {layerID} is invalid!");
-                return;
+                return new Layer();
             }
             LayerNames.Add(name, layerID);
+            return new Layer(this, layerID);
         }
 
         public void SetLayer(int layer, bool enabled)
         {
-            if (ValidLayer(layer))
+            if (!ValidLayer(layer))
             {
                 // TODO: MAKE A FRIGGEN LOGGER
                 Console.WriteLine($"Layer {layer} is invalid!");
@@ -62,7 +66,7 @@ namespace RayEngine.Core
 
         public bool IsLayerEnabled(int layer)
         {
-            if (ValidLayer(layer))
+            if (!ValidLayer(layer))
             {
                 // TODO: MAKE A FRIGGEN LOGGER
                 Console.WriteLine($"Layer {layer} is invalid!");
@@ -100,6 +104,6 @@ namespace RayEngine.Core
             return new Layer(this, LayerNames[name]);
         }
 
-        public bool ValidLayer(int layer) => layer > MaxLayers || layer < 0;
+        public bool ValidLayer(int layer) => layer >= 0 && layer < MaxLayers;
     }
 }

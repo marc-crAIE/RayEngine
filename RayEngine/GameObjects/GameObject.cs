@@ -16,7 +16,7 @@ namespace RayEngine.GameObjects
 
         internal Entity EntityHandle = 0;
         internal Scene? Scene = null;
-        internal int LayerID = 0;
+        public int LayerID = 0;
 
         public GameObject(string tag = "GameObject")
         {
@@ -38,6 +38,7 @@ namespace RayEngine.GameObjects
             Scene?.GameObjects.Remove(ID);
             Parent = parent;
             Parent.Children.Add(ID, this);
+            LayerID = Parent.LayerID;
 
             parent.Registry ??= new EntityRegistry();
 
@@ -53,6 +54,7 @@ namespace RayEngine.GameObjects
             Scene?.GameObjects.Remove(child.ID);
             Children.Add(child.ID, child);
             child.Parent = this;
+            child.LayerID = LayerID;
 
             Registry ??= new EntityRegistry();
 
