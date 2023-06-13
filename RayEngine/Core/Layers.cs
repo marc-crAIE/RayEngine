@@ -10,18 +10,21 @@ namespace RayEngine.Core
     public struct Layer
     {
         private int LayerID;
+        private string Name;
         private Layers? Owner;
 
-        internal Layer(Layers? owner, int layerID)
+        internal Layer(Layers? owner, int layerID, string name = "")
         {
             Owner = owner;
             LayerID = layerID;
+            Name = name;
         }
 
         public void Enable(bool enabled = true) => Owner?.SetLayer(LayerID, enabled);
         public bool IsEnabled() => Owner is not null ? Owner.IsLayerEnabled(LayerID) : false;
 
         public int GetID() => LayerID;
+        public string GetName() => Name;
         public Layers? GetOwner() => Owner;
     }
 
@@ -92,7 +95,8 @@ namespace RayEngine.Core
                 Console.WriteLine($"Layer {layer} is invalid!");
                 return new Layer(null, -1);
             }
-            return new Layer(this, layer);
+            string name = LayerNames.FirstOrDefault(x => x.Value == layer).Key ?? layer.ToString();
+            return new Layer(this, layer, name);
         }
         public Layer GetLayer(string name)
         {
@@ -101,7 +105,7 @@ namespace RayEngine.Core
                 Console.WriteLine($"Layer \"{name}\" is invalid!");
                 return new Layer(null, -1);
             }
-            return new Layer(this, LayerNames[name]);
+            return new Layer(this, LayerNames[name], name);
         }
 
         public bool ValidLayer(int layer) => layer >= 0 && layer < MaxLayers;

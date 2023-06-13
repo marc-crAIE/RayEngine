@@ -1,6 +1,7 @@
 ﻿using RayEngine.Debug;
 using RayEngine.Events;
 using Raylib_cs;
+using SharpMaths;
 
 namespace RayEngine.Core
 {
@@ -47,6 +48,8 @@ namespace RayEngine.Core
 
         public int GetWidth() => Data.Width;
         public int GetHeight() => Data.Height;
+
+        public Vector2 GetSize() => new Vector2(GetHeight(), GetWidth());
 
         internal void OnUpdate()
         {
