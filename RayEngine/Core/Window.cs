@@ -49,7 +49,7 @@ namespace RayEngine.Core
         public int GetWidth() => Data.Width;
         public int GetHeight() => Data.Height;
 
-        public Vector2 GetSize() => new Vector2(GetHeight(), GetWidth());
+        public Vector2 GetSize() => new Vector2(GetWidth(), GetHeight());
 
         internal void OnUpdate()
         {
